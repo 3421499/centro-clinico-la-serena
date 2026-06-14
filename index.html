@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro Clínico La Serena</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <svg width="14" height="58" viewBox="0 0 14 58" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M7 1 C9.5 4 10.5 8 9 12 C7.5 16 5.5 17 7 21 C8.5 25 10.5 27 9 31.5 C7.5 36 5.5 38 7 42 C8.5 46 10.5 48 9 52 C8 54.5 7 57 7 57" stroke="#CC0000" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="7" cy="5"  rx="3.8" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="13" rx="4.1" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="21" rx="4.1" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="29" rx="4.1" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="37" rx="4.1" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="44" rx="3.8" ry="2.5" fill="#CC0000"/>
+      <ellipse cx="7" cy="51" rx="3.2" ry="2.2" fill="#CC0000"/>
+    </svg>
+    <div>
+      <div class="lbl">Centro Clínico</div>
+      <div class="name">La Serena</div>
+      <div class="sub">Sistema de fichas clínicas y evolución</div>
+    </div>
+    <div class="sync-indicator" id="sync-indicator">
+      <i class="ti ti-cloud-check"></i> <span id="sync-text">Sincronizado</span>
+    </div>
+  </div>
+
+  <!-- ROLE BAR -->
+  <div class="role-bar">
+    <span class="role-lbl">Módulo:</span>
+    <button class="role-btn active" id="rbtn-eval" onclick="setRole('evaluador')"><i class="ti ti-clipboard-text"></i> Evaluación Inicial</button>
+    <button class="role-btn" id="rbtn-tera" onclick="setRole('terapeuta')"><i class="ti ti-activity"></i> Tratamiento</button>
+    <button class="role-btn stat" onclick="setRole('stats')"><i class="ti ti-chart-bar"></i> Estadísticas</button>
+  </div>
+
+  <div class="content">
+
+    <!-- EVALUACIÓN INICIAL -->
+    <div id="rol-eval">
+      <div class="tab-bar">
+        <button class="tab active" id="etab-base" onclick="evalTab('base')"><i class="ti ti-users"></i> Base de pacientes</button>
+        <button class="tab" id="etab-nueva" onclick="evalTab('nueva')"><i class="ti ti-file-plus"></i> Nueva ficha</button>
+      </div>
+      <div id="eval-base">
+        <div class="search-box">
+          <i class="ti ti-search search-icon"></i>
+          <input type="text" id="eval-search" placeholder="Buscar por nombre o diagnóstico..." oninput="renderBase()">
+        </div>
+        <div id="eval-list"></div>
+      </div>
+      <div id="eval-nueva" style="display:none">
+        <div class="sblock">
+          <div class="sblock-head"><i class="ti ti-user" style="color:var(--red);font-size:15px"></i><span>Datos del paciente</span></div>
+          <div class="sblock-body">
+            <div class="fgrid">
+              <div class="field ffull"><label>Nombre completo</label><input type="text" id="n-nombre" placeholder="Nombre y apellido"></div>
+              <div class="field"><label>RUT</label><input type="text" id="n-rut" placeholder="12.345.678-9"></div>
+              <div class="field"><label>Fecha de ingreso</label><input type="date" id="n-ingreso"></div>
+              <div class="field"><label>Edad</label><input type="number" id="n-edad" placeholder="Años" min="0" max="120"></div>
+              <div class="field"><label>Previsión</label>
+                <select id="n-prevision">
+                  <option value="">Seleccionar...</option>
+                  <option>FONASA A</option><option>FONASA B</option><option>FONASA C</option><option>FONASA D</option>
+                  <option>ISAPRE</option><option>Particular</option><option>PRAIS</option><option>Otro</option>
+                </select>
+              </div>
+              <div class="field"><label>Diagnóstico</label><input type="text" id="n-diagnostico" placeholder="Diagnóstico principal"></div>
+              <div class="field"><label>Programa</label>
+                <select id="n-programa-sel">
+                  <option value="">Seleccionar...</option>
+                  <option value="Regenerativo">Regenerativo</option>
+                  <option value="Columna">Columna Vertebral</option>
+                  <option value="Hiperbarica">Cámara Hiperbárica</option>
+                  <option value="KineClasica">Kine Clásica</option>
+                  <option value="PisoPelvico">Piso Pélvico</option>
+                  <option value="Otros">Otros</option>
+                </select>
+              </div>
+              <div class="field ffull"><label>Antecedentes</label><textarea id="n-antecedentes" placeholder="Antecedentes mórbidos, alergias, medicamentos..."></textarea></div>
+              <div class="field ffull"><label>Primera consulta</label><textarea id="n-primera" placeholder="Motivo de consulta y anamnesis..."></textarea></div>
+              <div class="field ffull"><label>Programa de tratamiento</label><textarea id="n-programa" placeholder="Plan de tratamiento, objetivos, número de sesiones..."></textarea></div>
+              <div class="field ffull"><label>Evaluación kinésica</label><textarea id="n-evaluacion" placeholder="Evaluación funcional, pruebas, hallazgos..."></textarea></div>
+            </div>
+          </div>
+        </div>
+        <div class="actions"><button class="btn-save" onclick="createPatient()"><i class="ti ti-device-floppy"></i> Guardar ficha</button></div>
+      </div>
+    </div>
+
+    <!-- TRATAMIENTO -->
+    <div id="rol-tera" style="display:none">
+      <div class="tab-bar">
+        <button class="tab active" id="ttab-cal" onclick="teraTab('cal')"><i class="ti ti-calendar"></i> Calendario</button>
+        <button class="tab" id="ttab-hist" onclick="teraTab('hist')"><i class="ti ti-history"></i> Historial</button>
+      </div>
+      <div id="tera-cal">
+        <div class="cal-top">
+          <button class="cal-nav" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+          <span class="cal-month" id="cal-month"></span>
+          <button class="cal-nav" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="day-panel" id="day-panel" style="display:none">
+          <div class="day-panel-head"><i class="ti ti-calendar-event"></i> <span id="day-label"></span></div>
+          <div id="day-list"></div>
+          <div class="add-box">
+            <div class="add-box-lbl"><i class="ti ti-search" style="font-size:12px"></i> Buscar paciente para agregar al día:</div>
+            <div class="search-wrap">
+              <i class="ti ti-search si"></i>
+              <input class="add-input" type="text" id="tera-search" placeholder="Escribe el nombre..." oninput="searchForDay()">
+            </div>
+            <div id="results-list"></div>
+          </div>
+        </div>
+      </div>
+      <div id="tera-hist" style="display:none"><div id="hist-list"></div></div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div id="rol-stats" style="display:none">
+      <div id="stats-lock">
+        <div class="stat-lock">
+          <div style="font-size:40px;margin-bottom:12px">🔒</div>
+          <div class="stat-lock-title">Acceso restringido</div>
+          <div class="stat-lock-sub">Ingresa tu clave para ver las estadísticas</div>
+          <input class="pin-input" type="password" id="pin-input" maxlength="10" placeholder="••••••" onkeydown="if(event.key==='Enter')checkPin()">
+          <div class="pin-error" id="pin-error">Clave incorrecta. Inténtalo de nuevo.</div>
+          <div style="margin-top:14px"><button class="btn-save" onclick="checkPin()"><i class="ti ti-lock-open"></i> Ingresar</button></div>
+        </div>
+      </div>
+      <div id="stats-content" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-size:16px;font-weight:500;color:var(--color-text)"><i class="ti ti-chart-bar" style="color:var(--red)"></i> Panel de Estadísticas</div>
+          <button class="btn-back" onclick="lockStats()"><i class="ti ti-lock"></i> Cerrar sesión</button>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-card-title">Hoy</div><div class="stat-num" id="s-hoy">0</div><div class="stat-num-label">pacientes atendidos</div></div>
+          <div class="stat-card"><div class="stat-card-title">Total últimos 7 días</div><div class="stat-num" id="s-semana">0</div><div class="stat-num-label">atenciones acumuladas</div></div>
+          <div class="stat-card"><div class="stat-card-title">Total últimos 30 días</div><div class="stat-num" id="s-mes">0</div><div class="stat-num-label">atenciones acumuladas</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Distribución por programa — Hoy (<span id="s-fecha-hoy"></span>)</div>
+          <div id="s-programas-hoy"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Historial de atenciones por día</div>
+          <table class="stat-table"><thead><tr><th>Fecha</th><th>Pacientes</th><th>Programas</th></tr></thead><tbody id="s-tabla"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FICHA -->
+    <div id="view-ficha" style="display:none">
+      <div class="ficha-header">
+        <button class="btn-back" onclick="backFromFicha()"><i class="ti ti-arrow-left"></i> Volver</button>
+        <span class="ficha-ttl" id="ficha-ttl"></span>
+      </div>
+      <div class="tab-bar">
+        <button class="tab active" id="ftab-datos" onclick="fichaTab('datos')"><i class="ti ti-user"></i> Datos</button>
+        <button class="tab" id="ftab-prog" onclick="fichaTab('prog')"><i class="ti ti-grid-dots"></i> Programa</button>
+        <button class="tab" id="ftab-ses" onclick="fichaTab('ses')"><i class="ti ti-clipboard-list"></i> Sesiones</button>
+      </div>
+
+      <div id="ft-datos">
+        <div class="sblock">
+          <div class="sblock-head"><i class="ti ti-user" style="color:var(--red);font-size:15px"></i><span>Datos del paciente</span></div>
+          <div class="sblock-body">
+            <div class="fgrid">
+              <div class="field ffull"><label>Nombre completo</label><input type="text" id="f-nombre"></div>
+              <div class="field"><label>RUT</label><input type="text" id="f-rut"></div>
+              <div class="field"><label>Fecha de ingreso</label><input type="date" id="f-ingreso"></div>
+              <div class="field"><label>Edad</label><input type="number" id="f-edad" min="0" max="120"></div>
+              <div class="field"><label>Previsión</label>
+                <select id="f-prevision">
+                  <option value="">Seleccionar...</option>
+                  <option>FONASA A</option><option>FONASA B</option><option>FONASA C</option><option>FONASA D</option>
+                  <option>ISAPRE</option><option>Particular</option><option>PRAIS</option><option>Otro</option>
+                </select>
+              </div>
+              <div class="field"><label>Diagnóstico</label><input type="text" id="f-diagnostico"></div>
+              <div class="field ffull"><label>Antecedentes</label><textarea id="f-antecedentes"></textarea></div>
+              <div class="field ffull"><label>Primera consulta</label><textarea id="f-primera"></textarea></div>
+              <div class="field ffull"><label>Programa</label><textarea id="f-programa-txt" placeholder="Plan de tratamiento, objetivos, número de sesiones..."></textarea></div>
+              <div class="field ffull"><label>Evaluación kinésica</label><textarea id="f-evaluacion"></textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ft-prog" style="display:none">
+        <div class="sblock">
+          <div class="sblock-head"><i class="ti ti-grid-dots" style="color:var(--red);font-size:15px"></i><span>Programa asignado</span></div>
+          <div class="sblock-body">
+            <div class="field" style="margin-bottom:12px">
+              <label>Programa</label>
+              <select id="f-programa-sel" disabled>
+                <option value="">Sin programa</option>
+                <option value="Regenerativo">Regenerativo</option>
+                <option value="Columna">Columna Vertebral</option>
+                <option value="Hiperbarica">Cámara Hiperbárica</option>
+                <option value="KineClasica">Kine Clásica</option>
+                <option value="PisoPelvico">Piso Pélvico</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+            <div id="prog-badge-display" style="margin-bottom:14px"></div>
+            <div class="field ffull"><label>Descripción del programa</label><textarea id="f-programa" readonly></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ft-ses" style="display:none">
+        <div class="sblock">
+          <div class="sblock-head"><i class="ti ti-clipboard-list" style="color:var(--red);font-size:15px"></i><span>Evolución por sesiones</span></div>
+          <div>
+            <table class="stbl">
+              <thead><tr><th style="width:108px">Fecha</th><th style="width:36%">Tratamiento</th><th>Evolución</th><th style="width:34px"></th></tr></thead>
+              <tbody id="ses-body"></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addSession()"><i class="ti ti-plus"></i> Agregar sesión</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-save" onclick="savePatient()"><i class="ti ti-device-floppy"></i> Guardar cambios</button>
+        <button class="btn-outline" id="btn-inf1" onclick="openInforme('inst')" style="display:none"><i class="ti ti-building-hospital"></i> Inf. Institución</button>
+        <button class="btn-dark" id="btn-inf2" onclick="openInforme('kine')" style="display:none"><i class="ti ti-file-text"></i> Inf. Kinésico</button>
+        <span class="saved-ok" id="saved-ok"><i class="ti ti-check"></i> Guardado</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL INFORME -->
+<div class="modal-overlay" id="modal-informe">
+  <div class="modal">
+    <div id="inf-content"></div>
+    <div class="modal-footer">
+      <button class="btn-back" onclick="closeInforme()"><i class="ti ti-x"></i> Cerrar</button>
+      <button class="btn-save" onclick="printInforme()"><i class="ti ti-printer"></i> Imprimir / PDF</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toast-msg"></span></div>
+
+<!-- Firebase SDK -->
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
