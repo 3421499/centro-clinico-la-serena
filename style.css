@@ -40,13 +40,10 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 13px 20px;
-  background: #d0d0d0;
+  padding: 10px 20px;
+  background: #ffffff;
   border-bottom: 2px solid #888;
 }
-.header .lbl  { font-size: 12px; color: #444; }
-.header .name { font-size: 22px; font-weight: 600; color: #111; letter-spacing: -0.5px; }
-.header .sub  { font-size: 11px; color: #555; margin-top: 2px; }
 
 .sync-indicator {
   margin-left: auto;
